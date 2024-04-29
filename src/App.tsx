@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import { BoardState , Board } from './Board';
+import Crossword from './Crossword';
+import { loadDictionary } from './Dictionary';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface Props {}
+
+interface AppState {
+  board : BoardState
 }
 
-export default App;
+function loadBoard() : BoardState {
+  let crossword = new Crossword(loadDictionary());
+  return crossword.toBoard();
+}
+
+
+export default class App extends React.Component<Props, AppState> {
+  
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      board: loadBoard()
+    };
+  }
+
+  render() {
+      return (
+        <div className="App">
+          <Board board={this.state.board}/>
+        </div>
+      );
+  }
+}
